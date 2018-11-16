@@ -1,0 +1,31 @@
+{
+  "name": "lavalidate",
+  "version": "0.0.1",
+  "description": "Javascript implementation of Laravels validator rules",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrick-radius/lavalidate.git"
+  },
+  "keywords": [
+    "validation"
+  ],
+  "author": "Patrick Radius",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patrick-radius/lavalidate/issues"
+  },
+  "homepage": "https://github.com/patrick-radius/lavalidate#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.9",
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "date-fns": "^1.29.0",
+    "lodash": "^4.17.11"
+  }
+}
