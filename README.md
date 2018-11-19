@@ -14,7 +14,7 @@ Javascript implementation of Laravels validation rules
 - [ ] Bail
 - [ ] Before (Date)
 - [ ] Before Or Equal (Date)
-- [ ] Between
+- [x] Between
 - [ ] Boolean
 - [ ] Confirmed
 - [x] Date 
@@ -34,7 +34,7 @@ Javascript implementation of Laravels validation rules
 - [ ] Image (File)
 - [ ] In
 - [ ] In Array
-- [ ] Integer
+- [x] Integer
 - [ ] IP Address
 - [ ] JSON
 - [ ] Less Than

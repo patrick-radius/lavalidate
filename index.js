@@ -18,17 +18,17 @@ function string(value) {
 }
 
 function numeric(value) {
-  return !isNaN(parseFloat(value)) ? true : '{{field}} should be a number'
+  return (value !== null && !isNaN(value) && value !== '') ? true : '{{field}} should be a number'
 }
 
 function size(value, size) {
   if (numeric(value) === true) {
-    return parseFloat(value) >= size ? true : `{{field}} should be at least ${size}`
+    return parseFloat(value) >= size ? true : `length of {{field}} should be ${size}`
   }
   if (isNil(value)) {
-    return `{{field}} should be at least ${size}`
+    return `length of {{field}} should be ${size}`
   }
-  return value.length >= size ? true : `{{field}} should be at least ${size}`
+  return value.length >= size ? true : `{{field}} should have a length of ${size}`
 }
 
 
@@ -40,12 +40,35 @@ function date(value) {
   return reg(/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/, '{{field}} should be a date')(value)
 }
 
+function between(value, min, max) {
+  const _min = parseFloat(min)
+  const _max = parseFloat(max)
+  if (numeric(value) === true) {
+    if (parseFloat(value) > _min && parseFloat(value) < _max) return true
+
+    return `{{field}} should be between ${min} and ${max}`
+  }
+  const msg = `length of {{field}} should be between ${min} and ${max}`
+  if (isNil(value)) return msg
+
+  if (value.length > _min && value.length < _max) return true
+
+  return msg
+}
+
+function integer(value) {
+  return numeric(value) === true && Number.isInteger(parseFloat(value)) ? true : '{{field}} should be an integer'
+}
+
+
 const validatorMap = {
+  between,
   date,
   required,
   string,
   size,
   numeric,
+  integer,
   present,
   email: reg(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, '{{field}} should be an e-mail'),
   alpha: reg(/^[a-zA-Z]+$/i, '{{field}} should only contain alpha characters'),

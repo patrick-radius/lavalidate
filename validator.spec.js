@@ -9,7 +9,7 @@ describe('/utils/validator', () => {
   it('parses multiple rules', () => {
     expect(validator('3', 'required|numeric|size:3')).toEqual(true)
     expect(validator('foo', 'required|numeric|size:3')).toEqual(['{{field}} should be a number'])
-    expect(validator(null, 'numeric|required|size:3')).toEqual(['{{field}} should be a number', '{{field}} is required', '{{field}} should be at least 3'])
+    expect(validator(null, 'numeric|required|size:3')).toEqual(['{{field}} should be a number', '{{field}} is required', 'length of {{field}} should be 3'])
   })
 
   describe('rules', () => {
@@ -26,10 +26,10 @@ describe('/utils/validator', () => {
 
     it('size', () => {
       expect(validator('foo', 'size:3')).toEqual(true)
-      expect(validator('foo', 'size:5')).toEqual(['{{field}} should be at least 5'])
+      expect(validator('foo', 'size:5')).toEqual(['{{field}} should have a length of 5'])
 
       expect(validator(10, 'size:10')).toEqual(true)
-      expect(validator(9, 'size:10')).toEqual(['{{field}} should be at least 10'])
+      expect(validator(9, 'size:10')).toEqual(['length of {{field}} should be 10'])
     })
 
     it('numeric', () => {
@@ -101,6 +101,47 @@ describe('/utils/validator', () => {
       expect(validator('', 'date')).toEqual(msg)
       expect(validator(undefined, 'date')).toEqual(msg)
       expect(validator('25-05-2019', 'date')).toEqual(true)
+    })
+
+    it('between', () => {
+      const numbermsg = ['{{field}} should be between 5 and 20']
+      const lengthmsg = ['length of {{field}} should be between 5 and 20']
+
+      expect(validator(10, 'between:5:20')).toEqual(true)
+      expect(validator('6', 'between:5:20')).toEqual(true)
+      expect(validator('42', 'between:5:20')).toEqual(numbermsg)
+
+      expect(validator('foo', 'between:5:20')).toEqual(lengthmsg)
+      expect(validator('foo', 'between:0:4')).toEqual(true)
+      expect(validator(['a','b', 'c'], 'between:0:4')).toEqual(true)
+      expect(validator(['a','b', 'c', 'd', 'e'], 'between:0:4')).toEqual(['length of {{field}} should be between 0 and 4'])
+
+      expect(validator('foo-bar', 'between:5:20')).toEqual(true)
+      expect(validator('foo_bar', 'between:5:20')).toEqual(true)
+      expect(validator('foo@bar.nl', 'between:5:20')).toEqual(true)
+      expect(validator('', 'between:5:20')).toEqual(lengthmsg)
+      expect(validator(undefined, 'between:5:20')).toEqual(lengthmsg)
+      expect(validator('25-05-2019', 'between:5:20')).toEqual(true)
+    })
+
+    it('Integer', () => {
+      const msg = ['{{field}} should be an integer']
+
+      expect(validator(10, 'integer')).toEqual(true)
+      expect(validator('6', 'integer')).toEqual(true)
+      expect(validator('42', 'integer')).toEqual(true)
+      expect(validator(10.2, 'integer')).toEqual(msg)
+
+      expect(validator('foo', 'integer')).toEqual(msg)
+      expect(validator('foo', 'integer')).toEqual(msg)
+      expect(validator(['a','b', 'c'], 'integer')).toEqual(msg)
+
+      expect(validator('foo-bar', 'integer')).toEqual(msg)
+      expect(validator('foo_bar', 'integer')).toEqual(msg)
+      expect(validator('foo@bar.nl', 'integer')).toEqual(msg)
+      expect(validator('', 'integer')).toEqual(msg)
+      expect(validator(undefined, 'integer')).toEqual(msg)
+      expect(validator('25-05-2019', 'integer')).toEqual(msg)
     })
   })
 })
